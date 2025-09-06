@@ -1,11 +1,7 @@
 *.env
-
 venv/
-
 .clinerules/
-
 input.txt
 summary.txt
 GEMINI.MD
-
 .github/
