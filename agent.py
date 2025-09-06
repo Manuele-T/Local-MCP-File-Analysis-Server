@@ -1,5 +1,6 @@
 import asyncio
 import sys
+import mcp.types as types
 
 from mcp.client.session import ClientSession
 from mcp.client.sse import sse_client
@@ -22,21 +23,31 @@ async def main():
                 # Step 1: Read the input file.
                 print("Reading input.txt...")
                 read_result = await session.call_tool("read_file", {"path": "input.txt"})
-                file_content = read_result.content
+
+                if not read_result.content or not isinstance(read_result.content[0], types.TextContent):
+                    raise TypeError("Expected TextContent from read_file tool")
+                file_content = read_result.content[0].text
                 print("File read successfully.")
 
                 # Step 2: Summarize the content.
                 print("Summarizing content...")
                 summary_result = await session.call_tool("summarize_content", {"content": file_content})
-                summary = summary_result.content
+                
+                if not summary_result.content or not isinstance(summary_result.content[0], types.TextContent):
+                    raise TypeError("Expected TextContent from summarize_content tool")
+                summary = summary_result.content[0].text
                 print("Content summarized.")
 
                 # Step 3: Write the summary to a new file.
                 print("Writing summary...")
                 write_result = await session.call_tool("write_summary", {"path": "summary.txt", "summary": summary})
 
+                if not write_result.content or not isinstance(write_result.content[0], types.TextContent):
+                    raise TypeError("Expected TextContent from write_summary tool")
+                final_message = write_result.content[0].text
+
                 print(f"\n--- Success! ---")
-                print(f"Server says: {write_result.content}")
+                print(f"Server says: {final_message}")
 
     except Exception as e:
         print(f"\n--- Error ---", file=sys.stderr)
