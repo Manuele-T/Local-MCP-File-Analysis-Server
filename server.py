@@ -6,7 +6,7 @@ from fastmcp import FastMCP
 
 load_dotenv()
 
-mcp = FastMCP()
+mcp = FastMCP(log_level="DEBUG")
 
 @mcp.tool
 def read_file(path: str) -> str:
