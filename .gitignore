@@ -1,0 +1,11 @@
+*.env
+
+venv/
+
+.clinerules/
+
+input.txt
+
+GEMINI.MD
+
+.github/
